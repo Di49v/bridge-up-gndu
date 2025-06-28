@@ -21,7 +21,7 @@ function App() {
   const [stats, setStats] = useState<PlatformStats>(mockStats);
   const [requests, setRequests] = useState<ResourceRequest[]>(mockResourceRequests);
 
-  // Calculate total paper saved for impact page
+  // Calculate total paper saved for impact page - only from claimed resources with pages
   const totalPaperSaved = resources
     .filter(r => r.claimed && r.pages)
     .reduce((total, r) => total + (r.pages! / 1000), 0);
