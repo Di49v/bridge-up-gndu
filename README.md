@@ -7,7 +7,12 @@
 > *A Living Platform: Where Student Generosity Keeps the Campus Alive*
 
 ---
+## 🔗 Live Demo
 
+**Experience it here:**  
+[https://bridge-up-gndu.netlify.app](https://bridge-up-gndu.netlify.app)
+
+---
 ## 📚 Table of Contents
 - [Introduction](#introduction)
 - [Inspiration](#inspiration)
