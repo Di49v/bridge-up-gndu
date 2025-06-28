@@ -13,6 +13,8 @@ export interface Resource {
   motivationalMessage: string;
   handoverInstructions: string;
   contactInfo: string;
+  pages?: number; // For impact calculation
+  points?: number; // Points awarded when claimed
 }
 
 export interface User {
@@ -23,6 +25,7 @@ export interface User {
   resourcesShared: number;
   resourcesClaimed: number;
   totalValue: number;
+  points: number;
 }
 
 export interface Suggestion {
@@ -31,9 +34,29 @@ export interface Suggestion {
   author: string;
   branch: string;
   semester: number;
-  targetSemester: number; // For which semester this tip is intended
+  targetSemester: number;
   dateAdded: string;
   likes: number;
+}
+
+export interface ResourceRequest {
+  id: string;
+  title: string;
+  description: string;
+  branch: string;
+  semester: number;
+  requestedBy: string;
+  dateRequested: string;
+  fulfilled: boolean;
+}
+
+export interface BranchRepresentative {
+  id: string;
+  name: string;
+  branch: string;
+  semester: number;
+  contactInfo: string;
+  role: string;
 }
 
 export interface PlatformStats {
@@ -42,6 +65,7 @@ export interface PlatformStats {
   moneySaved: number;
   environmentalImpact: number;
   lastActivity: string;
+  communityHealth: number; // 0-100
 }
 
 export interface ResourceGroup {
@@ -50,3 +74,16 @@ export interface ResourceGroup {
   resources: Resource[];
   totalAvailable: number;
 }
+
+export const RESOURCE_POINTS = {
+  'Mini Drafter': 5,
+  'Sheet Holder': 3,
+  'Higher Engineering Mathematics': 10,
+  'Data Structures & Algorithms Textbook': 10,
+  'Digital Electronics Lab Manual': 8,
+  'PYQS - Previous Year Question Papers': 15,
+  'Concrete Technology Reference Book': 10,
+  'Java Programming Notes': 8,
+  'Engineering Graphics Drafting Set': 5,
+  'default': 5
+};

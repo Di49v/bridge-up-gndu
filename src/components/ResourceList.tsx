@@ -7,31 +7,27 @@ import AddResourceModal from './AddResourceModal';
 
 interface ResourceListProps {
   resources: Resource[];
-  selectedBranch: string;
-  selectedSemester: number;
   onAddResource: (resource: Omit<Resource, 'id' | 'dateAdded' | 'claimed'>) => void;
   onClaimResource: (resourceId: string) => void;
-  onBranchChange: (branch: string) => void;
-  onSemesterChange: (semester: number) => void;
 }
 
 const ResourceList: React.FC<ResourceListProps> = ({
   resources,
-  selectedBranch,
-  selectedSemester,
   onAddResource,
-  onClaimResource,
-  onBranchChange,
-  onSemesterChange
+  onClaimResource
 }) => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [showFilter, setShowFilter] = useState(false);
+  const [selectedBranch, setSelectedBranch] = useState<string>('All');
+  const [selectedSemester, setSelectedSemester] = useState<number | 'All'>('All');
   const [selectedResourceGroup, setSelectedResourceGroup] = useState<ResourceGroup | null>(null);
 
+  const branches = ['All', 'CSE', 'ECE', 'ME', 'CE', 'IT', 'EE', 'BCA', 'MCA'];
+  const semesters = ['All', 1, 2, 3, 4, 5, 6, 7, 8];
+
   const filteredResources = resources.filter(resource => {
-    const matchesBranch = resource.branch === selectedBranch;
-    const matchesSemester = resource.semester === selectedSemester;
+    const matchesBranch = selectedBranch === 'All' || resource.branch === selectedBranch;
+    const matchesSemester = selectedSemester === 'All' || resource.semester === selectedSemester;
     const matchesSearch = resource.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          resource.description.toLowerCase().includes(searchTerm.toLowerCase());
     
@@ -69,23 +65,13 @@ const ResourceList: React.FC<ResourceListProps> = ({
         <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div>
-              <h2 className="text-2xl font-bold text-gray-800">
-                {selectedBranch} - Semester {selectedSemester}
-              </h2>
+              <h2 className="text-2xl font-bold text-gray-800">Study Resources</h2>
               <p className="text-gray-600">
                 {totalAvailable} resources available across {resourceGroups.length} categories
               </p>
             </div>
             
             <div className="flex flex-col sm:flex-row gap-3">
-              <button
-                onClick={() => setShowFilter(!showFilter)}
-                className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                <Filter className="h-4 w-4" />
-                <span>Change Filter</span>
-              </button>
-              
               <button
                 onClick={() => setShowAddModal(true)}
                 className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
@@ -96,49 +82,52 @@ const ResourceList: React.FC<ResourceListProps> = ({
             </div>
           </div>
 
-          {/* Search */}
-          <div className="mt-4 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-            <input
-              type="text"
-              placeholder="Search resources..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
-
-          {/* Filter Panel */}
-          {showFilter && (
-            <div className="mt-4 p-4 bg-gray-50 rounded-lg border">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Branch</label>
-                  <select
-                    value={selectedBranch}
-                    onChange={(e) => onBranchChange(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                  >
-                    {['CSE', 'ECE', 'ME', 'CE', 'IT', 'EE', 'BCA', 'MCA'].map(branch => (
-                      <option key={branch} value={branch}>{branch}</option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Semester</label>
-                  <select
-                    value={selectedSemester}
-                    onChange={(e) => onSemesterChange(Number(e.target.value))}
-                    className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                  >
-                    {[1, 2, 3, 4, 5, 6, 7, 8].map(sem => (
-                      <option key={sem} value={sem}>Semester {sem}</option>
-                    ))}
-                  </select>
-                </div>
+          {/* Filters */}
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Search Resources</label>
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                <input
+                  type="text"
+                  placeholder="Search resources..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
               </div>
             </div>
-          )}
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Branch</label>
+              <select
+                value={selectedBranch}
+                onChange={(e) => setSelectedBranch(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              >
+                {branches.map(branch => (
+                  <option key={branch} value={branch}>
+                    {branch === 'All' ? 'All Branches' : branch}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Semester</label>
+              <select
+                value={selectedSemester}
+                onChange={(e) => setSelectedSemester(e.target.value === 'All' ? 'All' : Number(e.target.value))}
+                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              >
+                {semesters.map(sem => (
+                  <option key={sem} value={sem}>
+                    {sem === 'All' ? 'All Semesters' : `Semester ${sem}`}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
         </div>
 
         {/* No Resources Warning */}
@@ -149,7 +138,10 @@ const ResourceList: React.FC<ResourceListProps> = ({
               <div>
                 <h3 className="text-lg font-semibold text-yellow-800">No Resources Found</h3>
                 <p className="text-yellow-700">
-                  Be the first to share resources for {selectedBranch} Semester {selectedSemester}!
+                  {selectedBranch !== 'All' || selectedSemester !== 'All' 
+                    ? `No resources found for the selected filters. Try adjusting your search criteria.`
+                    : 'Be the first to share resources with the community!'
+                  }
                 </p>
               </div>
             </div>
@@ -172,8 +164,8 @@ const ResourceList: React.FC<ResourceListProps> = ({
         {/* Add Resource Modal */}
         {showAddModal && (
           <AddResourceModal
-            selectedBranch={selectedBranch}
-            selectedSemester={selectedSemester}
+            selectedBranch={selectedBranch === 'All' ? 'CSE' : selectedBranch}
+            selectedSemester={selectedSemester === 'All' ? 1 : selectedSemester}
             onClose={() => setShowAddModal(false)}
             onSubmit={onAddResource}
           />

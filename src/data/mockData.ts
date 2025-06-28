@@ -1,14 +1,59 @@
-import { Resource, User, Suggestion, PlatformStats } from '../types';
+import { Resource, User, Suggestion, PlatformStats, ResourceRequest, BranchRepresentative } from '../types';
 
 export const branches = ['CSE', 'ECE', 'ME', 'CE', 'IT', 'EE', 'BCA', 'MCA'];
 export const semesters = [1, 2, 3, 4, 5, 6, 7, 8];
 
 export const mockUsers: User[] = [
-  { id: '1', name: 'Arjun Singh', branch: 'CSE', semester: 6, resourcesShared: 12, resourcesClaimed: 3, totalValue: 2500 },
-  { id: '2', name: 'Priya Sharma', branch: 'ECE', semester: 7, resourcesShared: 8, resourcesClaimed: 5, totalValue: 1800 },
-  { id: '3', name: 'Rohit Kumar', branch: 'ME', semester: 5, resourcesShared: 15, resourcesClaimed: 2, totalValue: 3200 },
-  { id: '4', name: 'Simran Kaur', branch: 'CSE', semester: 8, resourcesShared: 6, resourcesClaimed: 7, totalValue: 1200 },
-  { id: '5', name: 'Mandeep Singh', branch: 'CE', semester: 4, resourcesShared: 10, resourcesClaimed: 4, totalValue: 2100 },
+  { id: '1', name: 'Arjun Singh', branch: 'CSE', semester: 6, resourcesShared: 12, resourcesClaimed: 3, totalValue: 2500, points: 180 },
+  { id: '2', name: 'Priya Sharma', branch: 'ECE', semester: 7, resourcesShared: 8, resourcesClaimed: 5, totalValue: 1800, points: 120 },
+  { id: '3', name: 'Rohit Kumar', branch: 'ME', semester: 5, resourcesShared: 15, resourcesClaimed: 2, totalValue: 3200, points: 225 },
+  { id: '4', name: 'Simran Kaur', branch: 'CSE', semester: 8, resourcesShared: 6, resourcesClaimed: 7, totalValue: 1200, points: 90 },
+  { id: '5', name: 'Mandeep Singh', branch: 'CE', semester: 4, resourcesShared: 10, resourcesClaimed: 4, totalValue: 2100, points: 150 },
+  { id: '6', name: 'Navdeep Singh', branch: 'CSE', semester: 3, resourcesShared: 4, resourcesClaimed: 8, totalValue: 800, points: 60 },
+  { id: '7', name: 'Jasleen Kaur', branch: 'ECE', semester: 5, resourcesShared: 7, resourcesClaimed: 3, totalValue: 1500, points: 105 },
+  { id: '8', name: 'Harpreet Singh', branch: 'ME', semester: 6, resourcesShared: 9, resourcesClaimed: 5, totalValue: 1900, points: 135 },
+];
+
+export const mockBranchReps: BranchRepresentative[] = [
+  { id: '1', name: 'Arjun Singh', branch: 'CSE', semester: 6, contactInfo: 'WhatsApp: +91 98765-43210', role: 'Senior Representative' },
+  { id: '2', name: 'Priya Sharma', branch: 'ECE', semester: 7, contactInfo: 'Email: priya.ece@gndu.ac.in', role: 'Branch Coordinator' },
+  { id: '3', name: 'Rohit Kumar', branch: 'ME', semester: 5, contactInfo: 'WhatsApp: +91 87654-32109', role: 'Resource Manager' },
+  { id: '4', name: 'Mandeep Singh', branch: 'CE', semester: 4, contactInfo: 'Telegram: @mandeep_ce', role: 'Community Volunteer' },
+  { id: '5', name: 'Jasleen Kaur', branch: 'IT', semester: 6, contactInfo: 'WhatsApp: +91 76543-21087', role: 'Student Helper' },
+  { id: '6', name: 'Harpreet Singh', branch: 'EE', semester: 5, contactInfo: 'Email: harpreet.ee@gndu.ac.in', role: 'Branch Representative' },
+];
+
+export const mockResourceRequests: ResourceRequest[] = [
+  {
+    id: '1',
+    title: 'Thermodynamics Textbook',
+    description: 'Need a good thermodynamics book for ME 3rd semester. Preferably by R.K. Rajput.',
+    branch: 'ME',
+    semester: 3,
+    requestedBy: 'Navdeep Singh',
+    dateRequested: '2024-01-16',
+    fulfilled: false
+  },
+  {
+    id: '2',
+    title: 'Circuit Analysis Lab Manual',
+    description: 'Looking for circuit analysis lab manual for ECE 2nd semester practical work.',
+    branch: 'ECE',
+    semester: 2,
+    requestedBy: 'Jasleen Kaur',
+    dateRequested: '2024-01-15',
+    fulfilled: false
+  },
+  {
+    id: '3',
+    title: 'Programming in C Notes',
+    description: 'Need comprehensive C programming notes with examples and exercises.',
+    branch: 'CSE',
+    semester: 1,
+    requestedBy: 'Harpreet Singh',
+    dateRequested: '2024-01-14',
+    fulfilled: true
+  }
 ];
 
 export const mockResources: Resource[] = [
@@ -26,7 +71,8 @@ export const mockResources: Resource[] = [
     claimed: false,
     motivationalMessage: 'Engineering graphics is the foundation! Practice daily and you\'ll master it.',
     handoverInstructions: 'Available for pickup from CSE department or hostel room 204',
-    contactInfo: 'WhatsApp: +91 98765-43210'
+    contactInfo: 'WhatsApp: +91 98765-43210',
+    points: 5
   },
   {
     id: '2',
@@ -40,7 +86,8 @@ export const mockResources: Resource[] = [
     claimed: false,
     motivationalMessage: 'Sharing is caring! Hope this helps you in your graphics journey.',
     handoverInstructions: 'Can meet at library or CSE lab during evening hours',
-    contactInfo: 'Telegram: @simran_cse'
+    contactInfo: 'Telegram: @simran_cse',
+    points: 5
   },
   {
     id: '3',
@@ -55,7 +102,8 @@ export const mockResources: Resource[] = [
     claimed: false,
     motivationalMessage: 'Small tools, big impact! Keep your sheets organized.',
     handoverInstructions: 'Available at mechanical workshop or canteen during lunch',
-    contactInfo: 'Phone: +91 87654-32109'
+    contactInfo: 'Phone: +91 87654-32109',
+    points: 3
   },
   {
     id: '4',
@@ -70,7 +118,9 @@ export const mockResources: Resource[] = [
     claimed: false,
     motivationalMessage: 'Math is the language of engineering. Master it and everything becomes easier!',
     handoverInstructions: 'Can deliver to your hostel or meet at ECE department',
-    contactInfo: 'WhatsApp: +91 76543-21098'
+    contactInfo: 'WhatsApp: +91 76543-21098',
+    pages: 800,
+    points: 10
   },
   {
     id: '5',
@@ -84,7 +134,9 @@ export const mockResources: Resource[] = [
     claimed: false,
     motivationalMessage: 'PYQS are gold! Practice them and ace your exams.',
     handoverInstructions: 'Will share Google Drive link via email or WhatsApp',
-    contactInfo: 'Email: mandeep.ce@gndu.ac.in'
+    contactInfo: 'Email: mandeep.ce@gndu.ac.in',
+    pages: 200,
+    points: 15
   },
   // More semester resources
   {
@@ -99,7 +151,9 @@ export const mockResources: Resource[] = [
     claimed: false,
     motivationalMessage: 'This book helped me ace my DSA exam! Hope it helps you too. Keep coding! 💻',
     handoverInstructions: 'Available for pickup from CSE department or hostel',
-    contactInfo: 'WhatsApp: +91 98765-43210'
+    contactInfo: 'WhatsApp: +91 98765-43210',
+    pages: 600,
+    points: 10
   },
   {
     id: '7',
@@ -113,7 +167,9 @@ export const mockResources: Resource[] = [
     claimed: false,
     motivationalMessage: 'These papers helped me understand exam patterns. Use them wisely!',
     handoverInstructions: 'Digital copies available via Google Drive link',
-    contactInfo: 'Telegram: @simran_cse'
+    contactInfo: 'Telegram: @simran_cse',
+    pages: 150,
+    points: 15
   },
   // ECE Resources
   {
@@ -129,7 +185,8 @@ export const mockResources: Resource[] = [
     claimed: false,
     motivationalMessage: 'Graphics skills will help you in circuit design too!',
     handoverInstructions: 'Available at ECE lab or girls hostel common room',
-    contactInfo: 'WhatsApp: +91 76543-21098'
+    contactInfo: 'WhatsApp: +91 76543-21098',
+    points: 5
   },
   {
     id: '9',
@@ -143,7 +200,9 @@ export const mockResources: Resource[] = [
     claimed: false,
     motivationalMessage: 'Start your ECE journey with confidence using these papers!',
     handoverInstructions: 'Digital format - will share via email or cloud link',
-    contactInfo: 'Email: priya.ece@gndu.ac.in'
+    contactInfo: 'Email: priya.ece@gndu.ac.in',
+    pages: 180,
+    points: 15
   },
   {
     id: '10',
@@ -158,7 +217,9 @@ export const mockResources: Resource[] = [
     claimed: false,
     motivationalMessage: 'Digital electronics is the foundation of everything! Master it and you\'ll excel in VLSI.',
     handoverInstructions: 'Can meet at ECE lab during practical hours',
-    contactInfo: 'WhatsApp: +91 76543-21098'
+    contactInfo: 'WhatsApp: +91 76543-21098',
+    pages: 120,
+    points: 8
   },
   // ME Resources
   {
@@ -174,7 +235,8 @@ export const mockResources: Resource[] = [
     claimed: false,
     motivationalMessage: 'Precision in drawing leads to precision in engineering!',
     handoverInstructions: 'Available at mechanical workshop or boys hostel',
-    contactInfo: 'Phone: +91 87654-32109'
+    contactInfo: 'Phone: +91 87654-32109',
+    points: 5
   },
   {
     id: '12',
@@ -188,7 +250,9 @@ export const mockResources: Resource[] = [
     claimed: false,
     motivationalMessage: 'These papers will give you insight into exam patterns. Study smart!',
     handoverInstructions: 'Physical copies available at ME department notice board',
-    contactInfo: 'WhatsApp: +91 87654-32109'
+    contactInfo: 'WhatsApp: +91 87654-32109',
+    pages: 160,
+    points: 15
   }
 ];
 
@@ -250,5 +314,6 @@ export const mockStats: PlatformStats = {
   totalClaimed: 89,
   moneySaved: 12450,
   environmentalImpact: 78, // in kg of waste reduced
-  lastActivity: '2024-01-15'
+  lastActivity: '2024-01-15',
+  communityHealth: 75 // 0-100 scale
 };

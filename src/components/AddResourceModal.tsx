@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { X, Gift, DollarSign } from 'lucide-react';
-import { Resource } from '../types';
+import React, { useState, useEffect } from 'react';
+import { X, Gift, DollarSign, Star, Leaf } from 'lucide-react';
+import { Resource, RESOURCE_POINTS } from '../types';
 
 interface AddResourceModalProps {
   selectedBranch: string;
@@ -25,8 +25,26 @@ const AddResourceModal: React.FC<AddResourceModalProps> = ({
     offeredBy: 'Current User', // In real app, this would come from auth
     motivationalMessage: '',
     handoverInstructions: '',
-    contactInfo: ''
+    contactInfo: '',
+    pages: ''
   });
+
+  const [calculatedImpact, setCalculatedImpact] = useState(0);
+  const [points, setPoints] = useState(0);
+
+  useEffect(() => {
+    // Calculate environmental impact
+    if (formData.pages && formData.title.toLowerCase().includes('book') || formData.title.toLowerCase().includes('manual') || formData.title.toLowerCase().includes('notes')) {
+      const paperSaved = Number(formData.pages) / 1000; // 1kg ≈ 1000 pages
+      setCalculatedImpact(paperSaved);
+    } else {
+      setCalculatedImpact(0);
+    }
+
+    // Calculate points
+    const resourcePoints = RESOURCE_POINTS[formData.title] || RESOURCE_POINTS.default;
+    setPoints(resourcePoints);
+  }, [formData.pages, formData.title]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,7 +59,9 @@ const AddResourceModal: React.FC<AddResourceModalProps> = ({
       offeredBy: formData.offeredBy,
       motivationalMessage: formData.motivationalMessage,
       handoverInstructions: formData.handoverInstructions,
-      contactInfo: formData.contactInfo
+      contactInfo: formData.contactInfo,
+      pages: formData.pages ? Number(formData.pages) : undefined,
+      points: points
     };
     
     onSubmit(resource);
@@ -132,6 +152,10 @@ const AddResourceModal: React.FC<AddResourceModalProps> = ({
                 <Gift className="h-6 w-6 mx-auto mb-2" />
                 <div className="font-medium">Donate</div>
                 <div className="text-sm text-gray-600">Share for free</div>
+                <div className="flex items-center justify-center mt-2 text-xs text-green-600">
+                  <Star className="h-3 w-3 mr-1" />
+                  <span>{points} points when claimed</span>
+                </div>
               </button>
               <button
                 type="button"
@@ -145,6 +169,10 @@ const AddResourceModal: React.FC<AddResourceModalProps> = ({
                 <DollarSign className="h-6 w-6 mx-auto mb-2" />
                 <div className="font-medium">Sell</div>
                 <div className="text-sm text-gray-600">Set a price</div>
+                <div className="flex items-center justify-center mt-2 text-xs text-blue-600">
+                  <Star className="h-3 w-3 mr-1" />
+                  <span>{points} points when claimed</span>
+                </div>
               </button>
             </div>
           </div>
@@ -165,6 +193,30 @@ const AddResourceModal: React.FC<AddResourceModalProps> = ({
               />
             </div>
           )}
+
+          {/* Impact Calculator */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Number of Pages (for books/manuals)
+            </label>
+            <input
+              type="number"
+              value={formData.pages}
+              onChange={(e) => setFormData({...formData, pages: e.target.value})}
+              placeholder="e.g., 500"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+            {calculatedImpact > 0 && (
+              <div className="mt-2 p-3 bg-green-50 rounded-lg border border-green-200">
+                <div className="flex items-center space-x-2 text-green-700">
+                  <Leaf className="h-4 w-4" />
+                  <span className="text-sm font-medium">
+                    Environmental Impact: ~{calculatedImpact.toFixed(2)} kg of paper saved!
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
